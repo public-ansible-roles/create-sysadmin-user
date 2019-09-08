@@ -1,0 +1,27 @@
+---
+- name: add user
+  user: 
+    name: "{{ item.key }}"
+    uid: "{{ item.value.uid }}"
+    createhome: yes
+    shell: /bin/bash
+    password: $6$5gQb7Uu0$ipKuJVfhzzPa5rDT4485VhoUqPQkHAlCmeX74vfcLIe5NpFWq6mvL1VVHaP7QWaaA7lZ
+    state: present
+  with_dict: "{{ users }}"
+
+- name: register pub key
+  authorized_key: 
+    user: "{{ item.key }}"
+    key: "{{ lookup('file', item.value.pubkey ) }}"
+    state: present
+  with_dict: "{{ users }}"
+
+- name: assign sudo to user
+  template:
+    src: "{{ item.value.priv  }}_sudoers.j2"
+    dest: "/etc/sudoers.d/{{ item.key }}"
+    owner: root
+    group: root
+    mode: 0400
+    backup: yes
+  with_dict: "{{ users }}"

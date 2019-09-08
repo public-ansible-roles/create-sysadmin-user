@@ -1,0 +1,7 @@
+---
+users:
+ sysadmin:
+   detail: "sysadmin user with Administrator role"
+   uid: "2001"
+   priv: admin
+   pubkey: "{{ inventory_dir }}/roles/create-sysadmin-user/files/.ssh/id_rsa.pub"
